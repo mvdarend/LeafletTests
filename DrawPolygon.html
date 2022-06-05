@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+    <style type="text/css">
+        #map { height: 600px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <p>Click on the map, each click will extend the polygon. (F5 to start again)</p>
+
+    <script>
+        var map = L.map('map').setView([51.99681, 5.669687], 13);
+        map.on('click', onMapClick);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        var coordinateList = [];
+        var drawnPolygon;
+
+        function onMapClick(e) {
+
+            if(drawnPolygon)
+            {
+                map.removeLayer(drawnPolygon);
+            }
+
+            coordinateList.push([e.latlng.lat, e.latlng.lng]);
+        
+            drawnPolygon = L.polygon(coordinateList).addTo(map);
+        }
+    </script>
+
+</body>
+</html>
