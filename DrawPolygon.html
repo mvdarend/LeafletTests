@@ -7,12 +7,30 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <style type="text/css">
         #map { height: 600px; }
+        #Buttons{
+            text-align: center;
+        }
+        #Buttons a{
+            display: inline-block;
+            margin: 10px;
+            padding: 4px 8px;
+            font-size: 20px;
+            color: #fff;
+            border: solid 1px #00a;
+            background-color: #00f;
+            text-decoration: none;
+        }
+        #Buttons a:hover{
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
-
-    <p>Click on the map, each click will extend the polygon. (F5 to start again).</p>
+<div id="Buttons">
+    <a href="#" id="Clear polygon" onclick="ClearPolygon()">Clear</a><a href="#" id="Download coordinates">Save</a>
+</div>
+    <p>Click on the map, each click will extend the polygon, right-clickl will remove the last added point.</p>
 
     <script>
         var map = L.map('map').setView([51.99681, 5.669687], 13);
@@ -27,16 +45,51 @@
         var drawnPolygon;
 
         function onMapClick(e) {
+            coordinateList.push([e.latlng.lat, e.latlng.lng]);
+            redrawPolygon();
+        }
 
+        function redrawPolygon()
+        {
             if(drawnPolygon)
             {
                 map.removeLayer(drawnPolygon);
             }
-
-            coordinateList.push([e.latlng.lat, e.latlng.lng]);
-        
             drawnPolygon = L.polygon(coordinateList).addTo(map);
+            addCoordinatesToDownloadLink();
         }
+
+        function ClearPolygon(){
+            if(drawnPolygon)
+            {
+                map.removeLayer(drawnPolygon);
+            }
+            coordinateList = [];
+        }
+
+        function addCoordinatesToDownloadLink() {
+
+            var text = '';
+            coordinateList.forEach(element => {
+                text += element;
+                text += '\r\n';
+            });
+
+            var element = document.getElementById('Save');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', "coordinates.txt");
+        }
+
+        // catch right-click
+        window.oncontextmenu = function ()
+        {
+            if(coordinateList){
+                coordinateList.pop(); // remove last item from the coordinateList
+            }
+            redrawPolygon();
+            return false;     // cancel default menu
+        }
+
     </script>
 
 </body>
