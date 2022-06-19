@@ -28,12 +28,12 @@
 <body>
     <div id="map"></div>
 <div id="Buttons">
-    <a href="#" id="Clear polygon" onclick="ClearPolygon()">Clear</a><a href="#" id="Download coordinates">Save</a>
+    <a href="#" id="Clear" onclick="ClearPolygon()">Clear Polygon</a><a href="#" id="Save">Download coordinates</a>
 </div>
     <p>Click on the map, each click will extend the polygon, right-clickl will remove the last added point.</p>
 
     <script>
-        var map = L.map('map').setView([51.99681, 5.669687], 13);
+        var map = L.map('map').setView([51.99864818212016,5.675585027372075], 13);
         map.on('click', onMapClick);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
